@@ -1,38 +1,13 @@
 package config
 
 import (
-	"os"
 	"time"
-
-	"github.com/asaskevich/govalidator"
-	"github.com/caarlos0/env/v8"
-	"github.com/joho/godotenv"
 )
-
-func New[T any]() (T, error) {
-	var cfg T
-
-	if envFilePath, ok := os.LookupEnv("ENV_FILE_PATH"); ok {
-		if err := godotenv.Load(envFilePath); err != nil {
-			return cfg, err
-		}
-	}
-
-	if err := env.Parse(&cfg); err != nil {
-		return cfg, err
-	}
-
-	if ok, err := govalidator.ValidateStruct(cfg); !ok {
-		return cfg, err
-	}
-
-	return cfg, nil
-}
 
 type Config struct {
 	App        App
 	HTTPServer HTTPServer `envPrefix:"HTTP_"`
-	Storage    Storage    `envPrefix:"MARIADB_"`
+	Storage    Storage    `envPrefix:"STORAGE_"`
 }
 
 type App struct {

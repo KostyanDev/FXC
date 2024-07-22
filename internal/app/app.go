@@ -2,19 +2,23 @@ package app
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
+	"app/internal/storage"
+
 	"app/internal/config"
 	"app/internal/service"
 	httpServer "app/internal/transport/http"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
+	"github.com/sirupsen/logrus"
 )
 
 func Run() error {
@@ -22,9 +26,18 @@ func Run() error {
 	if err != nil {
 		return err
 	}
+	log := logrus.New()
 
-	trustService := service.New()
-	handler := httpServer.New(trustService)
+	dbPool, err := sql.Open("mysql", cfg.Storage.DSN)
+	if err != nil {
+		log.Fatal("Failed to connect to database:", err)
+	}
+
+	defer dbPool.Close()
+
+	db := storage.New(log, dbPool)
+	trustService := service.New(context.Background(), log, *db)
+	handler := httpServer.New(context.Background(), log, trustService)
 	router := mux.NewRouter()
 	httpServer.RegisterRoutes(router, handler)
 
