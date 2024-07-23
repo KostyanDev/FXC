@@ -5,5 +5,5 @@ import (
 )
 
 func RegisterRoutes(router *mux.Router, handler *Handler) {
-	router.HandleFunc("/price", handler.GetPricingList).Methods("POST")
+	router.HandleFunc("/pricing", handler.GetPricingList).Methods("POST")
 }
