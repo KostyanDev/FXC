@@ -1,18 +1,18 @@
 package storage
 
 import (
-	"database/sql"
+	"github.com/jmoiron/sqlx"
 
 	"github.com/sirupsen/logrus"
 )
 
-type Storage struct {
+type storage struct {
 	logger *logrus.Logger
-	ext    *sql.DB
+	ext    *sqlx.DB
 }
 
-func New(logger *logrus.Logger, ext *sql.DB) *Storage {
-	return &Storage{
+func New(logger *logrus.Logger, ext *sqlx.DB) *storage {
+	return &storage{
 		logger: logger,
 		ext:    ext,
 	}
