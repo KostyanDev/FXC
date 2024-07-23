@@ -36,3 +36,8 @@ check-db:
 restart-db:
 	@echo "Restarting the database container..."
 	docker-compose restart $(DB_CONTAINER_NAME)
+
+# Run tests inside the app container
+test: build up
+	@echo "Running tests..."
+	docker-compose exec $(APP_NAME) go test ./... -v
