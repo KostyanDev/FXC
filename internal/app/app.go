@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
 	"net/http"
 	"os"
@@ -18,6 +17,7 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
+	"github.com/jmoiron/sqlx"
 	"github.com/sirupsen/logrus"
 )
 
@@ -28,7 +28,7 @@ func Run() error {
 	}
 	log := logrus.New()
 
-	dbPool, err := sql.Open("mysql", cfg.Storage.DSN)
+	dbPool, err := sqlx.Open("mysql", cfg.Storage.DSN)
 	if err != nil {
 		log.Fatal("Failed to connect to database:", err)
 	}
@@ -36,7 +36,7 @@ func Run() error {
 	defer dbPool.Close()
 
 	db := storage.New(log, dbPool)
-	trustService := service.New(context.Background(), log, *db)
+	trustService := service.New(context.Background(), log, db)
 	handler := httpServer.New(context.Background(), log, trustService)
 	router := mux.NewRouter()
 	httpServer.RegisterRoutes(router, handler)

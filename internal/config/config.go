@@ -16,7 +16,7 @@ type App struct {
 
 type HTTPServer struct {
 	Host         string        `env:"SERVER_HOST" envDefault:"localhost"`
-	Port         int           `env:"SERVER_PORT" envDefault:"8181"`
+	Port         int           `env:"SERVER_PORT" envDefault:"8080"`
 	WriteTimeout time.Duration `env:"WRITE_TIMEOUT" envDefault:"15s"`
 	ReadTimeout  time.Duration `env:"READ_TIMEOUT" envDefault:"15s"`
 }
