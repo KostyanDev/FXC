@@ -41,3 +41,6 @@ restart-db:
 test: build up
 	@echo "Running tests..."
 	docker-compose exec $(APP_NAME) go test ./... -v
+
+run:
+	docker-compose -f docker-compose.yaml up -d

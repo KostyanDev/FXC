@@ -10,6 +10,7 @@ import (
 	"app/internal/domain"
 )
 
+// GetPricingByDate retrieves pricing data for a given date from the database.
 func (s storage) GetPricingByDate(ctx context.Context, data domain.RequestPricing) ([]domain.Pricing, error) {
 	var pricingArr dto.PricingArr
 	query := `
@@ -27,5 +28,6 @@ func (s storage) GetPricingByDate(ctx context.Context, data domain.RequestPricin
 		}).Error("Failed to fetch pricing data")
 		return nil, err
 	}
+	// Convert the results to the domain representation and return
 	return pricingArr.ToDomain(), nil
 }

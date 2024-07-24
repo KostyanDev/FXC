@@ -8,6 +8,7 @@ import (
 	"app/internal/transport/converters"
 )
 
+// GetPricingList handles HTTP requests to retrieve pricing data.
 func (h *Handler) GetPricingList(w http.ResponseWriter, r *http.Request) {
 	var request converters.PricingRequest
 
@@ -27,6 +28,8 @@ func (h *Handler) GetPricingList(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
+
+	// Retrieve the pricing data from the service
 	resp, err := h.service.GetPricing(r.Context(), converters.ToDomainPricing(date))
 	if err != nil {
 		h.log.Error("Error getting pricing: ", err)
@@ -34,6 +37,7 @@ func (h *Handler) GetPricingList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Set the content type to JSON and write the response
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	if err := json.NewEncoder(w).Encode(converters.DomainPricingToResponsePricing(resp)); err != nil {
